@@ -1,0 +1,7 @@
+node_revision_restrict.settings_form:
+  path: '/admin/config/content/node-revision-restrict'
+  defaults:
+    _title: 'Node Revision Restrict'
+    _form: '\Drupal\node_revision_restrict\Form\AdminSettingsForm'
+  requirements:
+    _permission: 'administer permissions'

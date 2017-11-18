@@ -1,0 +1,49 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_help().
+ */
+function node_revision_restrict_help($path) {
+  $output = '';
+  switch ($path) {
+    case "help.page.node_revision_restrict":
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Node Revision Restrict module allows you to restrict node revisions for each content type.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<ul><li>' . t('Configuring content types') . '</li>';
+      $output .= '<li>' . t('Deleting revisions') . '</li>';
+      $output .= '<li>' . t('Each time that a node is edited, if his content type it is configured to use this module the revisions will be restricted to the limit configured for him.') . '</li>';
+      $output .= '</ul>';
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function node_revision_restrict_entity_presave(EntityInterface $entity) {
+
+  if ($entity->getEntityType()->id() == 'node') {
+    $nid = $entity->id();
+    $content_type = $entity->bundle();
+    $count_to_restrict_set_value =  \Drupal::configFactory()->getEditable('node_revision_restrict.settings')->get('restrict_node_revision_number_for_' . $content_type);
+
+    if (isset($count_to_restrict_set_value) && isset($nid)) {
+
+      $entity_type_manager = \Drupal::service('entity_type.manager');
+      $entity_type_manager->getStorage('node')->loadRevision($nid);
+
+      $vids = \Drupal::entityManager()->getStorage('node')->revisionIds($entity);
+
+      $revisions_to_delete = array_slice($vids, 0, count($vids) - $count_to_restrict_set_value);
+
+      foreach($revisions_to_delete as $vid){
+        \Drupal::entityTypeManager()->getStorage('node')->deleteRevision($vid);
+      }
+    }
+  }
+}
+

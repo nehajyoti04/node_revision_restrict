@@ -1,0 +1,4 @@
+administer node restrict:
+  title: 'Administer Node Revision Restrict'
+  description: 'Allow access to configure the module settings.'
+  restrict access: TRUE

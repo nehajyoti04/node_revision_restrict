@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function node_revision_restrict_uninstall() {
+  \Drupal::configFactory()->getEditable('node_revision_restrict.settings')->delete();
+}

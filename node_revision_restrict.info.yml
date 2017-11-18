@@ -1,0 +1,6 @@
+name: 'Node Revision Restrict'
+description: 'Allows you to restrict node revisions for each content type.'
+package: 'Content'
+core: 8.x
+type: module
+configure: node_revision_restrict.settings_form
